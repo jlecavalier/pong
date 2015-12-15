@@ -7,6 +7,9 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_keyboard.h>
+#include <GLFW/glfw3.h>
 
 #define LEN 8192 // Maximum length of text string
 

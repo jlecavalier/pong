@@ -16,8 +16,8 @@ CFLG=-O3 -Wall -Wno-deprecated-declarations
 LIBS=-framework GLUT -framework OpenGL
 #  Linux/Unix/Solaris
 else
-CFLG=-O3 -Wall
-LIBS=-lglut -lGLU -lGL -lm
+CFLG=-O3 -Wall `sdl-config --cflags --libs` -lSDL_mixer
+LIBS=-lglut -lGLU -lGL -lm -lSDL
 endif
 #  OSX/Linux/Unix/Solaris
 CLEAN=rm -f $(EXE) src/*.o src/*.a $(AUX)*.o $(OBJ)*.o

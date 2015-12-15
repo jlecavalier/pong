@@ -22,6 +22,9 @@ float racket_left_y = 50.0f;
 float racket_right_x = 480;
 float racket_right_y = 50;
 
+// keys
+int keys[256];
+
 // Draw a rectangle
 void drawRect(float x, float y, float width, float height) {
   glBegin(GL_QUADS);
@@ -77,8 +80,31 @@ void draw() {
   glutSwapBuffers();
 }
 
+// Get asynchronous keyboard state so we can update according
+// To the user's input.
+void keyboard() {
+  Uint8 *state = SDL_GetKeyState(NULL);
+  if (state[SDLK_UP]) {
+  	printf("HELLO?");
+  	racket_right_y += racket_speed;
+  }
+  if (state[SDLK_DOWN]) {
+  	racket_right_y -= racket_speed;
+  }
+  if (state[SDLK_w]) {
+  	racket_left_y += racket_speed;
+  	printf("HELLO?");
+  }
+  if (state[SDLK_s]) {
+  	racket_left_y -= racket_speed;
+  }
+}
+
 // Tells glut how to update what the player sees based on what they do
 void update(int value) {
+  // update positions of rackets
+  keyboard();
+
   // call update every 'interval' milliseconds.
   glutTimerFunc(interval, update, 0);
 
@@ -87,26 +113,10 @@ void update(int value) {
 }
 
 // Tells glut what to do when normal keys are pressed
-void key(unsigned char ch,int x,int y) {
+void g_key(unsigned char ch,int x,int y) {
   // Exit when the user presses ESC
   if (ch == 27) {
   	exit(0);
-  }
-  else if (ch == 'w' || ch == 'W') {
-  	racket_left_y += racket_speed;
-  }
-  else if (ch == 's' || ch == 'S') {
-  	racket_left_y -= racket_speed;
-  }
-}
-
-// Tells glut what to do when certain keys are pressed
-void special(int key,int x,int y) {
-  if (key == GLUT_KEY_UP) {
-  	racket_right_y += racket_speed;
-  }
-  else if (key == GLUT_KEY_DOWN) {
-  	racket_right_y -= racket_speed;
   }
 }
 
@@ -118,11 +128,13 @@ int main(int argc, char** argv) {
   glutInitWindowSize(width, height);
   glutCreateWindow("PONG");	
 
+  glutSetKeyRepeat(0);
+  glutIgnoreKeyRepeat(0);
+
   // glut callbacks
   glutDisplayFunc(draw);
   glutTimerFunc(interval, update, 0);
-  glutSpecialFunc(special);
-  glutKeyboardFunc(key);
+  glutKeyboardFunc(g_key);
 
   // setup scene with 2d mode
   enable2D(width, height);
